@@ -1,26 +1,59 @@
 import { Injectable } from '@nestjs/common';
 import { CreatePlayerDto } from './dto/create-player.dto';
 import { UpdatePlayerDto } from './dto/update-player.dto';
+import { Repository } from 'typeorm';
+import { Player } from './entities/player.entity';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class PlayersService {
-  create(createPlayerDto: CreatePlayerDto) {
-    return 'This action adds a new player';
+  constructor(
+    @InjectRepository(Player)
+    private readonly playerRepository: Repository<Player>,
+  ) {}
+
+  async create(createPlayerDto: CreatePlayerDto) {
+    try {
+      const player = { ...createPlayerDto, isDeleted: false };
+      return await this.playerRepository.save(player);
+    } catch (error) {
+      throw error;
+    }
   }
 
-  findAll() {
-    return `This action returns all players`;
+  async findAll() {
+    try {
+      return await this.playerRepository.find({
+        where: { isDeleted: false },
+      });
+    } catch (error) {
+      throw error;
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} player`;
+  async findOne(id: number) {
+    try {
+      return await this.playerRepository.findOne({
+        where: { id, isDeleted: false },
+      });
+    } catch (error) {
+      throw error;
+    }
   }
 
-  update(id: number, updatePlayerDto: UpdatePlayerDto) {
-    return `This action updates a #${id} player`;
+  async update(id: number, updatePlayerDto: UpdatePlayerDto) {
+    try {
+      return await this.playerRepository.update(id, updatePlayerDto);
+    } catch (error) {
+      throw error;
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} player`;
+  async remove(id: number) {
+    try {
+      return await this.playerRepository.update(id, { isDeleted: true });
+    } catch (error) {
+      throw error;
+    }
   }
 }
