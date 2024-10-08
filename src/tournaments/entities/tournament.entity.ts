@@ -21,7 +21,7 @@ export class Tournament {
     () => PlayerTournament,
     (playerTournament) => playerTournament.tournament,
   )
-  playerTournament: PlayerTournament[];
+  playersTournament: PlayerTournament[];
 
   @OneToMany(() => Result, (result) => result.tournament)
   result: Result[];

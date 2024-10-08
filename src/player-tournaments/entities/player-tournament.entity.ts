@@ -19,7 +19,7 @@ export class PlayerTournament {
   @JoinColumn({ name: 'player_id' })
   player: Player;
 
-  @ManyToOne(() => Tournament, (tournament) => tournament.playerTournament)
+  @ManyToOne(() => Tournament, (tournament) => tournament.playersTournament)
   @JoinColumn({ name: 'tournament_id' })
   tournament: Tournament;
 
