@@ -9,6 +9,8 @@ import { PlayerTournamentsService } from 'src/player-tournaments/player-tourname
 import { PlayersModule } from 'src/players/players.module';
 import { Player } from 'src/players/entities/player.entity';
 import { PlayersService } from 'src/players/players.service';
+import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
@@ -17,6 +19,12 @@ import { PlayersService } from 'src/players/players.service';
     PlayersModule,
   ],
   controllers: [TournamentsController],
-  providers: [TournamentsService, PlayerTournamentsService, PlayersService],
+  providers: [
+    TournamentsService,
+    PlayerTournamentsService,
+    PlayersService,
+    JwtService,
+    ConfigService,
+  ],
 })
 export class TournamentsModule {}
