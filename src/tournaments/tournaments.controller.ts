@@ -13,6 +13,10 @@ import { UpdateTournamentDto } from './dto/update-tournament.dto';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { TypeTournaments } from 'src/common/enum/type.tournaments';
 import { Tournament } from './entities/tournament.entity';
+import {
+  PrivateService,
+  Role,
+} from 'src/common/decorators/permision.decorators';
 
 @ApiTags('Tournaments')
 @Controller('tournaments')
@@ -50,6 +54,8 @@ export class TournamentsController {
       error: 'Bad Request',
     },
   })
+  @PrivateService()
+  @Role(['admin'])
   @Post()
   create(@Body() createTournamentDto: CreateTournamentDto) {
     return this.tournamentsService.create(createTournamentDto);
