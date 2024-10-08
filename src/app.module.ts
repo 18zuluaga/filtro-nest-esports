@@ -11,6 +11,7 @@ import { configDotenv } from 'dotenv';
 import { Player } from './players/entities/player.entity';
 import { Result } from './results/entities/result.entity';
 import { Tournament } from './tournaments/entities/tournament.entity';
+import { AuthModule } from './auth/auth.module';
 
 configDotenv();
 @Module({
@@ -29,6 +30,7 @@ configDotenv();
     PlayersModule,
     ResultsModule,
     PlayerTournamentsModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

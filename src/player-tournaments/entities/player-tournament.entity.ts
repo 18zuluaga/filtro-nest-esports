@@ -15,11 +15,17 @@ export class PlayerTournament {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Player, (player) => player.playerTournament)
+  @ManyToOne(() => Player, (player) => player.playerTournament, {
+    onDelete: 'CASCADE',
+    eager: true,
+  })
   @JoinColumn({ name: 'player_id' })
   player: Player;
 
-  @ManyToOne(() => Tournament, (tournament) => tournament.playerTournament)
+  @ManyToOne(() => Tournament, (tournament) => tournament.playersTournament, {
+    onDelete: 'CASCADE',
+    eager: true,
+  })
   @JoinColumn({ name: 'tournament_id' })
   tournament: Tournament;
 

@@ -41,6 +41,16 @@ export class PlayersService {
     }
   }
 
+  async findOneByEmail(email: string) {
+    try {
+      return await this.playerRepository.findOne({
+        where: { email, isDeleted: false },
+      });
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async update(id: number, updatePlayerDto: UpdatePlayerDto) {
     try {
       return await this.playerRepository.update(id, updatePlayerDto);

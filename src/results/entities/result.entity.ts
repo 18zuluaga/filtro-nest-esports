@@ -27,10 +27,13 @@ export class Result {
   @JoinColumn({ name: 'winner_player_id' })
   winner: PlayerTournament;
 
-  @ManyToOne(() => Tournament, (tournament) => tournament.playerTournament)
+  @ManyToOne(() => Tournament, (tournament) => tournament.playersTournament)
   @JoinColumn({ name: 'tournament_id' })
   tournament: Tournament;
 
   @Column()
   date: Date;
+
+  @Column()
+  isDeleted: boolean;
 }
