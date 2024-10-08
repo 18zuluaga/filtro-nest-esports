@@ -1,4 +1,3 @@
-import { Player } from 'src/players/entities/player.entity';
 import { Injectable } from '@nestjs/common';
 import { CreatePlayerTournamentDto } from './dto/create-player-tournament.dto';
 import { UpdatePlayerTournamentDto } from './dto/update-player-tournament.dto';
@@ -6,37 +5,47 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PlayerTournament } from './entities/player-tournament.entity';
 import { PlayersService } from 'src/players/players.service';
-import { TournamentsService } from 'src/tournaments/tournaments.service';
+import { Tournament } from 'src/tournaments/entities/tournament.entity';
 
 @Injectable()
 export class PlayerTournamentsService {
   constructor(
     @InjectRepository(PlayerTournament)
     private readonly playerTournamentRepository: Repository<PlayerTournament>,
+    @InjectRepository(Tournament)
+    private readonly TournamentRepository: Repository<Tournament>,
 
     private readonly playersService: PlayersService,
-
-    private readonly tournamentsService: TournamentsService,
   ) {}
 
-  async create(createPlayerTournamentDto: CreatePlayerTournamentDto) {
+  async create(createPlayerTournamentDto: CreatePlayerTournamentDto[]) {
     try {
-      const player = await this.playersService.findOne(
-        createPlayerTournamentDto.playerId,
+      const players = createPlayerTournamentDto.map(
+        async (createPlayerTournamentDto) => {
+          const player = await this.playersService.findOne(
+            createPlayerTournamentDto.playerId,
+          );
+          const tournament = await this.TournamentRepository.findOne({
+            where: {
+              id: createPlayerTournamentDto.tournamentId,
+              isDeleted: false,
+            },
+          });
+          if (!player) {
+            throw new Error('Player or tournament not found');
+          }
+          const playerTournament = {
+            player,
+            tournament,
+            points: 0,
+            isDeleted: false,
+          };
+          const playerTournamentCreated =
+            await this.playerTournamentRepository.save(playerTournament);
+          return playerTournamentCreated;
+        },
       );
-      const tournament = await this.tournamentsService.findOne(
-        createPlayerTournamentDto.tournamentId,
-      );
-      if (!player || !tournament) {
-        throw new Error('Player or tournament not found');
-      }
-      const playerTournament = {
-        player,
-        tournament,
-        points: 0,
-        isDeleted: false,
-      };
-      return await this.playerTournamentRepository.save(playerTournament);
+      return players;
     } catch (error) {
       throw error;
     }

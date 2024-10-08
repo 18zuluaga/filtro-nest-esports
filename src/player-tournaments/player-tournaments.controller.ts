@@ -18,7 +18,7 @@ export class PlayerTournamentsController {
   ) {}
 
   @Post()
-  create(@Body() createPlayerTournamentDto: CreatePlayerTournamentDto) {
+  create(@Body() createPlayerTournamentDto: CreatePlayerTournamentDto[]) {
     return this.playerTournamentsService.create(createPlayerTournamentDto);
   }
 
