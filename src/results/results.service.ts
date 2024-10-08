@@ -24,7 +24,7 @@ export class ResultsService {
     );
 
     if (!winer || !loser || !tournament) {
-      throw new Error('Player or tournament not found');
+      throw new Error('Players or tournament not found');
     }
     return await this.resultRepository.save({
       winer,

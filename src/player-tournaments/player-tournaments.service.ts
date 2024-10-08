@@ -61,11 +61,40 @@ export class PlayerTournamentsService {
     }
   }
 
+  async paginationFindAll(limit: number, page: number) {
+    try {
+      const [data, total] = await this.playerTournamentRepository.findAndCount({
+        take: limit,
+        skip: (page - 1) * limit,
+      });
+      return { data, total };
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async findOne(id: number) {
     try {
       return await this.playerTournamentRepository.findOne({
         where: { id, isDeleted: false },
       });
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async findByTournamentId(tournamentId: number) {
+    try {
+      const tournament = await this.TournamentRepository.findOne({
+        where: { id: tournamentId, isDeleted: false },
+      });
+      if (!tournament) {
+        throw new Error('Tournament not found');
+      }
+      const players = await this.playerTournamentRepository.find({
+        where: { isDeleted: false },
+      });
+      return players.filter((player) => player.tournament.id === tournamentId);
     } catch (error) {
       throw error;
     }

@@ -32,9 +32,8 @@ export class TournamentsService {
             ) {
               const date = new Date(initialDate);
               date.setDate(date.getDate() + i);
-              matches.push(date);
               matches.push(
-                `Jornada ${i + 1} ${createTournamentDto.playerTournament[i]}-${createTournamentDto.playerTournament[j]}`,
+                `Jornada ${i + 1} fecha ${date.toLocaleDateString('es-ES')} jugador ${createTournamentDto.playerTournament[i]} vs jugador ${createTournamentDto.playerTournament[j]}`,
               );
               playedMatches.add(matchKey);
             }
@@ -80,6 +79,17 @@ export class TournamentsService {
       return await this.tournamentRepository.findOne({
         where: { id, isDeleted: false },
       });
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async ranking(id: number) {
+    try {
+      const players =
+        await this.playerTournamentsService.findByTournamentId(id);
+      console.log(players);
+      return players.sort((a, b) => b.points - a.points);
     } catch (error) {
       throw error;
     }
