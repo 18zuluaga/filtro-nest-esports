@@ -4,10 +4,9 @@ import * as dotenv from 'dotenv';
 import { BadRequestException, ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
-dotenv.config();
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-
+  dotenv.config();
   app.useGlobalPipes(
     new ValidationPipe({
       exceptionFactory: (errors) => {
@@ -27,6 +26,14 @@ async function bootstrap() {
     .setTitle('Products API')
     .setDescription('API para gestionar productos')
     .setVersion('1.0')
+    .addApiKey(
+      {
+        type: 'apiKey',
+        name: 'x-api-key',
+        in: 'header',
+      },
+      'x-api-key',
+    )
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
