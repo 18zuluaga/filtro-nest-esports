@@ -33,4 +33,7 @@ export class Result {
 
   @Column()
   date: Date;
+
+  @Column()
+  isDeleted: boolean;
 }
